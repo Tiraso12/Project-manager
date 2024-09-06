@@ -1,4 +1,4 @@
-# Logs
+screenshot*.png
 logs
 *.log
 npm-debug.log*

@@ -5,6 +5,7 @@ import { useState } from "react";
 import NewProject from "./components/NewProject.jsx";
 import ProjectSidebar from "./components/ProjectsSidebar.jsx";
 import NoProjectSelected from "./components/NoProjectSelected.jsx";
+import SelectedProjetct from "./components/SelectedProject.jsx";
 
 function App() {
   const [projectsState, setProjectState] = useState({
@@ -12,29 +13,58 @@ function App() {
     projects: []
   });
 
-  const projectSelected = !!projectsState.selectedProject; // Check if a project is selected
+  const projectSelected = !!projectsState.selectedProjectId; // Check if a project is selected
 
   function handleStartAddProject() {
     setProjectState(prevState =>{
       return{
+        ...prevState,
         selectedProjectId: null,
       }
     })
   }
 
+  function handleCancelAddProject(projectData) {
+    setProjectState(prevState =>{
+      return{
+        ...prevState,
+        selectedProjectId: undefined,
+      }
+    })
+  };
+
+  function handleAddProject(projectData) {
+    setProjectState(prevState=>{
+      const newProject={
+        ...projectData,
+        id: Math.random()
+      }
+      return {
+        ...prevState,
+        projects: [...prevState.projects, newProject],
+        selectedProjectId: undefined
+      }
+    })
+  }
+
+
   let content;
 
   if(projectsState.selectedProjectId === null){
-    content = <NewProject/>
+    content = <NewProject onAdd={handleAddProject} onCancel={handleCancelAddProject}/>
   }else if (projectsState.selectedProjectId === undefined){
-    content = <NoProjectSelected/>
+    content = <NoProjectSelected onStartAddProject={handleStartAddProject} />
   }
 
   return (
     <main className="h-screen my-8 flex gap-8">
-      <ProjectSidebar onStartAddProject={handleStartAddProject} />
+      <ProjectSidebar
+        onStartAddProject={handleStartAddProject}
+        projects={projectsState.projects}
+        />
+        <SelectedProjetct/>
       {/* <NewProject /> */}
-       {content} 
+       {/* {content}  */}
     </main>
   );
 }

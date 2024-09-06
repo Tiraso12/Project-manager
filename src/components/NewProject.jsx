@@ -1,27 +1,75 @@
-import Input from "./Input";
+import { useRef } from "react";
 
-export default function NewProject() {
+import Input from "./Input";
+import Modal from "./Modal";
+
+export default function NewProject({onAdd, onCancel}) {
+    const modal = useRef();
+   
+    const title = useRef();
+   const description = useRef();
+   const dueDate = useRef();
+
+    function handleSave() {
+        let enteredTitle = title.current.value; 
+        let enteredDescription = description.current.value; 
+        let enteredDueDate = dueDate.current.value;     
+        
+        //validation ...
+        if (
+            enteredTitle.trim() === "" || 
+            enteredDescription.trim() === "" 
+            || enteredDueDate.trim() === ""
+        ) {
+            modal.current.open();
+            return;
+        }
+
+        onAdd({
+            title: enteredTitle,
+            desription: enteredDescription,
+            dueDate: enteredDueDate,
+        });
+   }
+
+//  this function closes the form when the canceled button is pressed but I will try a second aproach in the app component  
+//    function handleCancel() {
+//        onAdd(null);
+//    }
+
     return(
+    <>
+    <Modal ref={modal} buttonCaption="Close">
+        <h2 className="text-2xl font-bold text-stone-700 my-4">Invalid input</h2>
+        <p className='text-stone-600 mb-4'>Please enter a value</p>
+        <p className='text-stone-600 mb-4'>make sure all fields are filled</p>
+    </Modal>
         <div className="w-[35rem] mt-16">
             <menu className="flex items-center justify-end gap-4 my-4">
                 <li>
-                <button className="text-stone-800 hover:text-stone-950">
+                <button 
+                    onClick={onCancel}
+                    className="text-stone-800 hover:text-stone-950">
                     Cancel
                     </button>
                 </li>
                 <li>
-                <button className="px-6 py-2 rounded-md bg-stone-800 text-stone-50 hover:bg-stone-950">
+                <button 
+                    className="px-6 py-2 rounded-md bg-stone-800 text-stone-50 hover:bg-stone-950"
+                    onClick={handleSave}
+                    >
                     Save
                 </button>
                 </li>
             </menu>
 
             <div>
-               <Input label="Title" />
-               <Input label="Description" textarea />
-               <Input label="Due Date"/>
+               <Input type="text" ref={title} label="Title" />
+               <Input ref={description} label="Description" textarea />
+               <Input type="date" ref={dueDate} label="Due Date"/>
             </div>
         </div>
+    </>
 
     )
 }
