@@ -7,6 +7,17 @@ import ProjectSidebar from "./components/ProjectsSidebar.jsx";
 import NoProjectSelected from "./components/NoProjectSelected.jsx";
 import SelectedProjetct from "./components/SelectedProject.jsx";
 
+  /**
+   * The main App component.
+   * It renders the sidebar, and depending on the state,
+   * it will render either the SelectedProject, NewProject or NoProjectSelected component.
+   * The state is managed by the useState hook.
+   * The state is an object with two properties: selectedProjectId and projects.
+   * The selectedProjectId is the id of the currently selected project, or undefined if no project is selected.
+   * The projects is an array of objects, each representing a project.
+   * The state is updated by the handleSelectProject, handleDeleteProject, handleStartAddProject and handleAddProject functions.
+   * The handleCancelAddProject function is used to cancel the addition of a new project.
+   */
 function App() {
   const [projectsState, setProjectState] = useState({
     selectedProjectId: undefined,
@@ -15,6 +26,43 @@ function App() {
 
   const projectSelected = !!projectsState.selectedProjectId; // Check if a project is selected
 
+  
+  /**
+   * Handles the selection of a project from the sidebar. 
+   * It updates the state to reflect the selected project id.
+   * @param {number} id - the id of the selected project
+   */
+  function handleSelectProject(id) {
+    setProjectState(prevState =>{
+      console.log(prevState);
+      return{
+        ...prevState,
+        selectedProjectId: id,
+      }
+      
+    })
+  }
+
+  /**
+   * Handles the deletion of a project.
+   * It removes the project from the state and sets the selectedProjectId to undefined,
+   * so the "NoProjectSelected" component is displayed again.
+   */
+  function handleDeleteProject() {
+    setProjectState(prevState =>{
+      console.log(prevState);
+      return{
+        ...prevState,
+        selectedProjectId: undefined,
+        projects: prevState.projects.filter(project => project.id !== prevState.selectedProjectId),
+      }
+    })
+  }
+  
+  /**
+   * Handles the start of adding a new project.
+   * It sets the selectedProjectId to null, so the "NoProjectSelected" component is displayed again.
+   */
   function handleStartAddProject() {
     setProjectState(prevState =>{
       return{
@@ -24,7 +72,11 @@ function App() {
     })
   }
 
-  function handleCancelAddProject(projectData) {
+  /**
+   * Handles the cancellation of adding a new project.
+   * It sets the selectedProjectId to undefined, so the "NoProjectSelected" component is displayed again.
+   */
+  function handleCancelAddProject() {
     setProjectState(prevState =>{
       return{
         ...prevState,
@@ -33,6 +85,12 @@ function App() {
     })
   };
 
+  /**
+   * Handles the addition of a new project.
+   * It adds the new project to the state and sets the selectedProjectId to undefined,
+   * so the "NoProjectSelected" component is displayed again.
+   * @param {object} projectData - contains the data of the new project
+   */
   function handleAddProject(projectData) {
     setProjectState(prevState=>{
       const newProject={
@@ -46,9 +104,10 @@ function App() {
       }
     })
   }
+  
+  const selectedProject = projectsState.projects.find(project => project.id === projectsState.selectedProjectId);
 
-
-  let content;
+  let content = <SelectedProjetct project={selectedProject} onDeleteProject = {handleDeleteProject}/>
 
   if(projectsState.selectedProjectId === null){
     content = <NewProject onAdd={handleAddProject} onCancel={handleCancelAddProject}/>
@@ -61,10 +120,9 @@ function App() {
       <ProjectSidebar
         onStartAddProject={handleStartAddProject}
         projects={projectsState.projects}
+        onSelectProject = {handleSelectProject}
         />
-        <SelectedProjetct/>
-      {/* <NewProject /> */}
-       {/* {content}  */}
+       {content} 
     </main>
   );
 }
