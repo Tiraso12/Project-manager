@@ -1,3 +1,5 @@
+import Tasks from "./Tasks";
+
 export default function SelectedProjetct({project, onDeleteProject}) {
     const formattedDate = new Date(project.dueDate).toLocaleDateString('en-US', {
         year: 'numeric',
@@ -24,12 +26,7 @@ export default function SelectedProjetct({project, onDeleteProject}) {
                 {project.description}
                 </p>
         </header>
-
-        <div>
-            <h1>
-            TASK
-            </h1>
-        </div>
+        <Tasks/>
     </div>
     )
 }
