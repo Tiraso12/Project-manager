@@ -21,10 +21,28 @@ import SelectedProjetct from "./components/SelectedProject.jsx";
 function App() {
   const [projectsState, setProjectState] = useState({
     selectedProjectId: undefined,
-    projects: []
+    projects: [],
+    tasks:[],
   });
 
-  const projectSelected = !!projectsState.selectedProjectId; // Check if a project is selected
+  function handleAddTask(text) {
+    setProjectState(prevState=>{
+      const taskId= Math.random();
+      const newTask={
+        text,
+        projectId: prevState.selectedProjectId,
+        id: taskId
+      }
+      return {
+        ...prevState,
+        tasks: [newTask,...prevState.tasks]
+      }
+    })
+  }
+
+  function handleDeleteTask(params) {
+    
+  }
 
   
   /**
@@ -93,9 +111,10 @@ function App() {
    */
   function handleAddProject(projectData) {
     setProjectState(prevState=>{
+      const projectId= Math.random();
       const newProject={
         ...projectData,
-        id: Math.random()
+        id: projectId
       }
       return {
         ...prevState,
@@ -107,7 +126,13 @@ function App() {
   
   const selectedProject = projectsState.projects.find(project => project.id === projectsState.selectedProjectId);
 
-  let content = <SelectedProjetct project={selectedProject} onDeleteProject = {handleDeleteProject}/>
+  let content = <SelectedProjetct
+                   project={selectedProject} 
+                   onDeleteProject = {handleDeleteProject}
+                   onAddTask={handleAddTask}
+                   onDeleteTask={handleDeleteTask}
+                   tasks={projectsState.tasks}
+                />
 
   if(projectsState.selectedProjectId === null){
     content = <NewProject onAdd={handleAddProject} onCancel={handleCancelAddProject}/>
