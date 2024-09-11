@@ -4,7 +4,7 @@ export default function ProjectSidebar({
     onStartAddProject,
     projects, 
     onSelectProject,
-    SelectedProjectId
+    selectedProjectId
     }) {
     return (
         <aside className="w-1/3 px-8 py-16 bg-stone-900 text-stone-50 md:w-72 rounded-r-xl">
@@ -14,7 +14,7 @@ export default function ProjectSidebar({
                 {projects.map((project) => {
                    let cssClases = "w-full text-left px-2 py-1 rounded-sm my-1  hover:text-stone-200 hover:bg-stone-800";
 
-                   if (project.id === SelectedProjectId) {
+                   if (project.id === selectedProjectId) {
                        cssClases += " bg-stone-800 text-stone-200";
                    } else{
                     cssClases += " text-stone-400";

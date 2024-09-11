@@ -32,7 +32,11 @@ export default function SelectedProjetct({
                 {project.description}
                 </p>
         </header>
-        <Tasks tasks={tasks} onAdd={onAddTask} onDelete={onDeleteTask} />
+        <Tasks 
+        tasks={tasks}
+        onAdd={onAddTask}
+        onDelete={onDeleteTask}
+           />
     </div>
     )
 }
